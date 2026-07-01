@@ -1,0 +1,43 @@
+services:
+  oracle:
+    image: gvenzl/oracle-xe:21-slim
+    environment:
+      ORACLE_PASSWORD: oracle
+      APP_USER: bazar_user
+      APP_USER_PASSWORD: bazar_pass
+    ports:
+      - "1521:1521"
+    healthcheck:
+      test: ["CMD", "healthcheck.sh"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+    volumes:
+      - oracle-data:/opt/oracle/oradata
+
+  backend:
+    build: ./backend
+    depends_on:
+      oracle:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: 5000
+      JWT_SECRET: ${JWT_SECRET:-replace-me-in-prod-please-make-it-long}
+      ORACLE_ENABLED: "true"
+      ORACLE_USER: bazar_user
+      ORACLE_PASSWORD: bazar_pass
+      ORACLE_CONNECT_STRING: oracle:1521/XEPDB1
+      CORS_ORIGIN: http://localhost:8080
+    ports:
+      - "5000:5000"
+
+  frontend:
+    build: ./frontend
+    depends_on:
+      - backend
+    ports:
+      - "8080:80"
+
+volumes:
+  oracle-data:

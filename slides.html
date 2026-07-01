@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bazar-Trace Presentation Slides</title>
+  
+  <!-- Reveal.js styles -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/reveal.css">
+  
+  <!-- Custom Slate & Indigo Theme matching Bazar-Trace Design system -->
+  <style>
+    :root {
+      --r-background-color: #0f172a;
+      --r-main-font: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --r-main-font-size: 36px;
+      --r-main-color: #f1f5f9;
+      --r-heading-font: 'Inter', sans-serif;
+      --r-heading-color: #ffffff;
+      --r-heading-font-weight: 700;
+      --r-heading-text-transform: none;
+      --r-link-color: #6366f1;
+      --r-link-color-hover: #4f46e5;
+      
+      /* Bazar-Trace custom colors */
+      --color-surface: #1e293b;
+      --color-accent: #6366f1;
+      --color-border: #334155;
+      --color-success: #22c55e;
+      --color-warning: #f59e0b;
+      --color-danger: #ef4444;
+      --color-text-muted: #94a3b8;
+    }
+
+    .reveal {
+      font-family: var(--r-main-font);
+      background-color: var(--r-background-color);
+      color: var(--r-main-color);
+    }
+
+    .reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
+      color: var(--r-heading-color);
+      font-weight: var(--r-heading-font-weight);
+      text-transform: var(--r-heading-text-transform);
+      margin-bottom: 20px;
+    }
+
+    /* Slides structure custom utility */
+    .slide-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      align-items: center;
+      text-align: left;
+    }
+
+    .card {
+      background-color: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-title {
+      font-weight: 700;
+      font-size: 24px;
+      margin-bottom: 12px;
+      color: var(--color-accent);
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 14px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+    
+    .badge--success { background-color: rgba(34, 197, 94, 0.15); color: var(--color-success); }
+    .badge--warning { background-color: rgba(245, 158, 11, 0.15); color: var(--color-warning); }
+    .badge--danger { background-color: rgba(239, 68, 68, 0.15); color: var(--color-danger); }
+    .badge--neutral { background-color: rgba(148, 163, 184, 0.15); color: var(--color-text-muted); }
+
+    ul {
+      font-size: 26px;
+      line-height: 1.6;
+      margin-left: 30px !important;
+      color: #cbd5e1;
+    }
+
+    li {
+      margin-bottom: 10px;
+    }
+
+    .accent-text {
+      color: var(--color-accent);
+      font-weight: 600;
+    }
+
+    /* Table override styles */
+    .reveal table {
+      font-size: 22px !important;
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    .reveal table th {
+      background-color: var(--color-surface);
+      color: var(--color-accent);
+      border-bottom: 2px solid var(--color-border) !important;
+      font-weight: 700;
+      padding: 10px 15px !important;
+    }
+
+    .reveal table td {
+      border-bottom: 1px solid var(--color-border) !important;
+      padding: 10px 15px !important;
+    }
+
+    /* Mermaid center helpers */
+    .mermaid-container {
+      background-color: white;
+      border-radius: 12px;
+      padding: 15px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 90%;
+      margin: 0 auto;
+      min-height: 400px;
+    }
+
+    .mermaid {
+      transform: scale(0.95);
+      transform-origin: center center;
+    }
+
+    /* Code layout container */
+    .reveal pre {
+      border-radius: 10px;
+      box-shadow: none !important;
+      margin: 0;
+      font-size: 16px;
+      width: 100%;
+    }
+  </style>
+
+  <!-- Mermaid.js for drawing diagrams directly in slides -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'default',
+      securityLevel: 'loose',
+      flowchart: { useMaxWidth: true, htmlLabels: true }
+    });
+  </script>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- Slide 1: Title Slide -->
+      <section>
+        <div style="text-align: center; padding: 20px;">
+          <h4 style="color: var(--color-text-muted); font-size: 24px; letter-spacing: 2px; margin-bottom: 30px;">UNIVERSITY OF SCHOLARS</h4>
+          <h1 style="font-size: 54px; margin-bottom: 20px;">Bazar-Trace</h1>
+          <h3 style="font-size: 28px; color: var(--color-text-muted); margin-bottom: 50px;">
+            Offline-First PWA Stock & Inventory Management System
+          </h3>
+          
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 50px; font-size: 20px; text-align: left; border-top: 1px solid var(--color-border); padding-top: 30px;">
+            <div>
+              <p><span class="accent-text">Presented By:</span></p>
+              <p style="font-weight: 700; font-size: 24px; margin: 5px 0;">[Your Name]</p>
+              <p>ID: 231010687</p>
+              <p>Dept of Computer Science & Engineering</p>
+            </div>
+            <div style="text-align: right;">
+              <p><span class="accent-text">Supervised By:</span></p>
+              <p style="font-weight: 700; font-size: 24px; margin: 5px 0;">Reduanul Bari Subhon</p>
+              <p>Department of CSE</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 2: What is Bazar-Trace? -->
+      <section>
+        <h2>What is Bazar-Trace?</h2>
+        <div class="slide-grid">
+          <div>
+            <ul>
+              <li>A <span class="accent-text">Single Page Application (SPA)</span> built purely using raw HTML5, Vanilla CSS, and modular ES6 JavaScript.</li>
+              <li>Implements an <span class="accent-text">Offline-First Engine</span> to guarantee sales logging during internet drops.</li>
+              <li>Runs local product lookups and scans via hardware integrations.</li>
+              <li>Secured with role-based access controllers.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <div class="card-title">Core Performance Metrics</div>
+            <div style="font-size: 20px; line-height: 1.8;">
+              <p>✓ Uptime: <strong>100% Offline Resilience</strong></p>
+              <p>✓ Size: <strong>Minimal static bundle shell</strong></p>
+              <p>✓ Client Cache: <strong>Asynchronous IndexedDB</strong></p>
+              <p>✓ Relational Core: <strong>Oracle DB Integrations</strong></p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 3: Motivation -->
+      <section>
+        <h2>Motivation & Problem Statement</h2>
+        <div class="slide-grid">
+          <div>
+            <ol style="font-size: 24px; line-height: 1.8; color: #cbd5e1;">
+              <li style="margin-bottom: 20px;">
+                <strong style="color: white;">Unstable Connectivity:</strong><br>
+                Retail shops in Bangladesh frequently lose internet access, disabling normal cloud systems.
+              </li>
+              <li style="margin-bottom: 20px;">
+                <strong style="color: white;">Heavy Software Costs:</strong><br>
+                Small businesses cannot afford costly licenses or local server setups.
+              </li>
+              <li>
+                <strong style="color: white;">Library Dependencies Constraint:</strong><br>
+                Proving that critical sync logic can be built without heavy framework layers (React/Next.js).
+              </li>
+            </ol>
+          </div>
+          <div class="card" style="border-left: 4px solid var(--color-danger);">
+            <div class="card-title" style="color: var(--color-danger);">The Cost of Offline Outages</div>
+            <p style="font-size: 18px; line-height: 1.6; color: var(--color-text-muted);">
+              "If a store loses connection for even 30 minutes during rush hour, inventory counts mismatch, receipts cannot compile, and checkout queues stall."
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 4: Project Goals -->
+      <section>
+        <h2>Project Goals</h2>
+        <div class="slide-grid" style="grid-template-columns: 1.2fr 0.8fr;">
+          <div>
+            <ul>
+              <li><span class="accent-text">Zero Latency Checkout:</span> Enable immediate invoice inputs and product queries local to the machine.</li>
+              <li><span class="accent-text">FIFO Sync Queue:</span> Queue database updates and drain automatically when networks restore.</li>
+              <li><span class="accent-text">Hardware Scanning:</span> Utilize camera permissions for instant product identification.</li>
+              <li><span class="accent-text">Educational Focus:</span> Maximize understanding of raw browser web APIs (Service Worker, Web Audio, Canvas).</li>
+            </ul>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 15px;">
+            <div class="card" style="text-align: center; padding: 15px;">
+              <span class="badge badge--success" style="font-size: 18px;">Offline Logs</span>
+            </div>
+            <div class="card" style="text-align: center; padding: 15px;">
+              <span class="badge badge--warning" style="font-size: 18px;">PWA Installable</span>
+            </div>
+            <div class="card" style="text-align: center; padding: 15px;">
+              <span class="badge badge--neutral" style="font-size: 18px;">Oracle DB</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 5: High-Level Architecture -->
+      <section>
+        <h3>System Architecture Diagram</h3>
+        <div class="mermaid-container">
+          <div class="mermaid">
+            graph TD
+              subgraph Browser [Client PWA - Vercel CDN]
+                UI[Vanilla HTML5/CSS] <--> Router[RegExp Router]
+                Router <--> Pages[SPA Page Modules]
+                Pages <--> APIClient[Offline-First API Client]
+                APIClient <--> IDB[(IndexedDB Cache)]
+              end
+              subgraph API [Backend App - Render Host]
+                APIClient <-->|HTTPS API Calls| Express[Node/Express Server]
+                Express <--> DB[(Oracle DB Instance)]
+              end
+              SW[Service Worker] <-->|Intercepts/Caches Shell| Browser
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 6: Technology Used -->
+      <section>
+        <h2>Technology Stack</h2>
+        <div class="slide-grid">
+          <div class="card">
+            <div class="card-title">Frontend Core</div>
+            <div style="font-size: 20px; line-height: 1.8;">
+              <p>• <strong>HTML5 & Custom CSS Variables</strong></p>
+              <p>• <strong>ES6 JS Modules</strong> (Vanilla)</p>
+              <p>• <strong>Service Worker</strong> (Dynamic cache shell)</p>
+              <p>• <strong>IndexedDB</strong> (Promise local storage)</p>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Backend & Infrastructure</div>
+            <div style="font-size: 20px; line-height: 1.8;">
+              <p>• <strong>Node.js & Express.js</strong> REST API</p>
+              <p>• <strong>Oracle Database</strong> (Docker / OCI)</p>
+              <p>• <strong>Vite</strong> (Fast static bundler)</p>
+              <p>• <strong>Web APIs</strong> (Camera, Web Audio, Canvas)</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 7: Functional Requirements -->
+      <section>
+        <h2>Functional Requirements</h2>
+        <div style="margin-top: 30px;">
+          <table>
+            <thead>
+              <tr>
+                <th>Module</th>
+                <th>Role: STAFF / CASHIER</th>
+                <th>Role: ADMINISTRATOR</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Inventory view</strong></td>
+                <td>Search and read stock levels</td>
+                <td>Add, Edit, Set Stock thresholds, Delete products</td>
+              </tr>
+              <tr>
+                <td><strong>Checkout Form</strong></td>
+                <td>Log sales and Received quantities</td>
+                <td>Log transactions & overwrite list unit values</td>
+              </tr>
+              <tr>
+                <td><strong>Security</strong></td>
+                <td>Login & Change personal password</td>
+                <td>Access Staff Directory, register accounts, disable users</td>
+              </tr>
+              <tr>
+                <td><strong>Analytics</strong></td>
+                <td>Read general lists</td>
+                <td>View canvas sales chart & Net Profits</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Slide 8: Non-Functional Requirements -->
+      <section>
+        <h2>Non-Functional Requirements</h2>
+        <div class="slide-grid">
+          <div class="card" style="border-top: 3px solid var(--color-success);">
+            <div class="card-title">Security & Reliability</div>
+            <div style="font-size: 18px; line-height: 1.6; color: var(--color-text-muted);">
+              <p>• <strong>Bcrypt Hashing:</strong> Credentials encrypted before database storage.</p>
+              <p>• <strong>JWT validation:</strong> API routes secure.</p>
+              <p>• <strong>Conflict Safety:</strong> IDempotent unique keys prevent retry logs duplication.</p>
+            </div>
+          </div>
+          <div class="card" style="border-top: 3px solid var(--color-accent);">
+            <div class="card-title">Performance & Usability</div>
+            <div style="font-size: 18px; line-height: 1.6; color: var(--color-text-muted);">
+              <p>• <strong>Render limits:</strong> Under 50ms layout paint cycles.</p>
+              <p>• <strong>Stale-While-Revalidate:</strong> Instant offline screen startups.</p>
+              <p>• <strong>Responsive layouts:</strong> Desktop max-width constraints centered.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 9: Data Flow Diagram (DFD Level-1) -->
+      <section>
+        <h3>Data Flow Diagram (Level-1)</h3>
+        <div class="mermaid-container">
+          <div class="mermaid">
+            graph TD
+              User([User: Admin/Staff]) -->|1. Record Sale| Form[SPA Record View]
+              Form -->|2. Check connection| Net{Browser Online?}
+              Net -->|Yes| Backend[Express REST API]
+              Net -->|No| IDB[(IndexedDB Sync Queue)]
+              Backend -->|3. Write Transaction SQL| Oracle[(Oracle Database)]
+              Backend -->|4. Response envelope| Form
+              IDB -->|5. Online event fires| Sync[Sync Manager]
+              Sync -->|6. Replay FIFO Queue| Backend
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 10: Entity Relationship (ER) Diagram -->
+      <section>
+        <h3>Entity Relationship (ER) Diagram</h3>
+        <div class="mermaid-container">
+          <div class="mermaid">
+            erDiagram
+              USERS {
+                  number id PK
+                  string email UK
+                  string password_hash
+                  string role
+                  boolean is_active
+              }
+              PRODUCTS {
+                  number id PK
+                  string sku UK
+                  string name
+                  number stock
+                  number cost_price
+                  number sell_price
+                  number low_stock_threshold
+                  date expiry_date
+              }
+              TRANSACTIONS {
+                  number id PK
+                  string client_txn_id UK
+                  number product_id FK
+                  number user_id FK
+                  string txn_type
+                  number quantity
+                  number unit_price
+                  timestamp occurred_at
+              }
+              USERS ||--o{ PRODUCTS : "creates"
+              USERS ||--o{ TRANSACTIONS : "performs"
+              PRODUCTS ||--o{ TRANSACTIONS : "receives"
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 11: Database Design (DDL Schema) -->
+      <section>
+        <h3>Database Schema Configuration</h3>
+        <div style="display: flex; flex-direction: column; gap: 15px; width: 100%;">
+          <pre><code class="language-sql" style="background-color: var(--color-surface); color: #cbd5e1; border: 1px solid var(--color-border); padding: 15px; display: block; line-height: 1.4;">
+CREATE TABLE products (
+  id NUMBER GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+  sku VARCHAR2(50) UNIQUE NOT NULL,
+  barcode VARCHAR2(100),
+  name VARCHAR2(150) NOT NULL,
+  stock NUMBER DEFAULT 0 NOT NULL,
+  cost_price NUMBER(10,2) NOT NULL,
+  sell_price NUMBER(10,2) NOT NULL,
+  low_stock_threshold NUMBER DEFAULT 5 NOT NULL,
+  expiry_date DATE
+);
+
+CREATE TABLE transactions (
+  id NUMBER GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+  client_txn_id VARCHAR2(50) UNIQUE NOT NULL,
+  product_id NUMBER REFERENCES products(id),
+  user_id NUMBER REFERENCES users(id),
+  txn_type VARCHAR2(10) CHECK (txn_type IN ('IN', 'OUT')),
+  quantity NUMBER NOT NULL,
+  unit_price NUMBER(10,2) NOT NULL,
+  occurred_at TIMESTAMP DEFAULT SYSTIMESTAMP
+);
+          </code></pre>
+        </div>
+      </section>
+
+      <!-- Slide 12: Gantt Chart -->
+      <section>
+        <h3>Project Development Timeline</h3>
+        <div class="mermaid-container">
+          <div class="mermaid">
+            gantt
+                title Development Gantt Timeline
+                dateFormat  YYYY-MM-DD
+                section Architecture
+                Spec & DB Schema Design     :done,    des1, 2026-06-01, 2026-06-05
+                section Backend
+                REST API (Zod & Bcrypt)     :done,    des2, 2026-06-06, 2026-06-14
+                section Frontend
+                Vanilla SPA Layouts         :done,    des3, 2026-06-15, 2026-06-20
+                IndexedDB & SW Offline Sync :done,    des4, 2026-06-21, 2026-06-25
+                section Audits
+                Integration & Final Tests   :done,    des5, 2026-06-26, 2026-06-28
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 13: SWOT Analysis -->
+      <section>
+        <h2>SWOT Analysis</h2>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 18px;">
+          <div class="card" style="border-left: 4px solid var(--color-success);">
+            <div class="card-title" style="color: var(--color-success);">Strengths (S)</div>
+            <p>• 100% offline uptime guarantee</p>
+            <p>• Zero framework overhead (high speed)</p>
+            <p>• Idempotent queue sync checks</p>
+          </div>
+          <div class="card" style="border-left: 4px solid var(--color-danger);">
+            <div class="card-title" style="color: var(--color-danger);">Weaknesses (W)</div>
+            <p>• Local DB updates rely on sync triggers</p>
+            <p>• Camera scan depends on browser support</p>
+          </div>
+          <div class="card" style="border-left: 4px solid var(--color-warning);">
+            <div class="card-title" style="color: var(--color-warning);">Opportunities (O)</div>
+            <p>• Expand into multi-terminal retail cash registers</p>
+            <p>• Direct thermal receipt printers binding</p>
+          </div>
+          <div class="card" style="border-left: 4px solid var(--color-text-muted);">
+            <div class="card-title" style="color: var(--color-text-muted);">Threats (T)</div>
+            <p>• Browser cache wipes delete un-synced queue items</p>
+            <p>• HTTPS restrictions for getUserMedia APIs</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 14: Project Cost Analysis -->
+      <section>
+        <h2>Project Cost Estimation</h2>
+        <div style="margin-top: 20px;">
+          <table>
+            <thead>
+              <tr>
+                <th>Category</th>
+                <th>Standard Cost (BDT)</th>
+                <th>Actual Solo Cost (BDT)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Design & UI/UX UI System</strong></td>
+                <td>10,000 - 15,000</td>
+                <td>0 BDT *(Done by Student)*</td>
+              </tr>
+              <tr>
+                <td><strong>Frontend Development</strong></td>
+                <td>45,000 - 60,000</td>
+                <td>0 BDT *(Done by Student)*</td>
+              </tr>
+              <tr>
+                <td><strong>Backend API Core</strong></td>
+                <td>60,000 - 80,000</td>
+                <td>0 BDT *(Done by Student)*</td>
+              </tr>
+              <tr>
+                <td><strong>Database OCI Cloud VM Hosting</strong></td>
+                <td>12,000 - 24,000</td>
+                <td>0 BDT *(Always Free VM)*</td>
+              </tr>
+              <tr style="font-weight: 700; color: var(--color-success);">
+                <td><strong>Total Project Cost</strong></td>
+                <td><strong>147,000 - 214,000 BDT</strong></td>
+                <td><strong>0 BDT (Academic Project)</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Slide 15: Conclusion & Thank You -->
+      <section style="text-align: center;">
+        <h1 style="font-size: 80px; color: var(--color-accent); margin-bottom: 40px;">Thank You</h1>
+        <p style="font-size: 28px; color: var(--color-text-muted); max-width: 800px; margin: 0 auto 50px;">
+          "Bazar-Trace demonstrates that robust, production-ready, offline-first systems can be fully realized using pure web standard APIs."
+        </p>
+        <div style="font-size: 20px; color: #cbd5e1; border-top: 1px solid var(--color-border); padding-top: 30px; display: inline-block;">
+          <p><strong>[Your Name]</strong> | ID: 231010687</p>
+          <p style="font-size: 16px; color: var(--color-text-muted); margin-top: 5px;">University of Scholars — CSE Capstone Project</p>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- Reveal.js script library -->
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/reveal.js"></script>
+  <script>
+    // Initialize reveal slideshow configuration
+    Reveal.initialize({
+      controls: true,
+      progress: true,
+      center: true,
+      hash: true,
+      transition: 'slide', // none/fade/slide/convex/concave/zoom
+    });
+  </script>
+</body>
+</html>

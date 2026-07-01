@@ -1,0 +1,136 @@
+/* ==========================================================================
+   css/pages/scanner.css
+   ========================================================================== */
+
+.scanner-container {
+  position: fixed;
+  inset: 0;
+  background-color: #000000;
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Video viewport stream */
+.scanner-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Viewfinder targets frame */
+.scanner-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: var(--space-6);
+}
+
+.scanner-viewfinder {
+  margin: auto;
+  width: 250px;
+  height: 180px;
+  border: 2px solid var(--color-success);
+  border-radius: var(--radius-md);
+  position: relative;
+  box-shadow: 0 0 0 4000px rgba(0, 0, 0, 0.5); /* Dim surroundings */
+}
+
+/* Center guide laser line */
+.scanner-laser {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: var(--color-danger);
+  top: 50%;
+  animation: scanLaser 2s linear infinite;
+  box-shadow: 0 0 8px var(--color-danger);
+}
+
+@keyframes scanLaser {
+  0%, 100% { top: 10%; }
+  50% { top: 90%; }
+}
+
+/* Overlay instructions text */
+.scanner-instructions {
+  position: absolute;
+  bottom: var(--space-8);
+  left: 0;
+  right: 0;
+  text-align: center;
+  color: #ffffff;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+  padding: 0 var(--space-4);
+  pointer-events: none;
+}
+
+/* Floating overlay back button */
+.scanner-close-btn {
+  position: absolute;
+  top: calc(var(--space-4) + env(safe-area-inset-top));
+  left: var(--space-4);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: rgba(30, 41, 59, 0.7);
+  backdrop-filter: blur(4px);
+  border: 1px solid var(--color-border);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  pointer-events: auto;
+  z-index: 2010;
+}
+
+.scanner-close-btn svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+
+/* Not supported fallback screen */
+.scanner-fallback-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-6);
+  background-color: var(--color-bg-primary);
+  text-align: center;
+}
+
+/* Inline scanning button on form inputs */
+.btn-input-scan {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-left: none;
+  padding: 0 0.75rem;
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-input-scan:hover {
+  background-color: var(--color-bg-surface);
+  color: var(--color-accent);
+}
+
+.btn-input-scan svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}

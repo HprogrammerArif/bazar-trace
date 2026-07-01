@@ -1,0 +1,81 @@
+/* ==========================================================================
+   css/layout.css
+   ========================================================================== */
+
+/* Main Layout Wrapper */
+.layout-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100%;
+}
+
+.content-area {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-4);
+  padding-bottom: calc(var(--bottom-nav-height) + var(--space-4) + env(safe-area-inset-bottom));
+}
+
+/* Centered max-width container — industry standard for web apps */
+.content-area > * {
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+}
+
+/* Bottom Navigation Bar */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom));
+  background-color: var(--color-bg-surface);
+  border-top: 1px solid var(--color-border);
+  z-index: 1000;
+  box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* Inner container — constrains nav items to match page max-width */
+.bottom-nav__container {
+  max-width: 1280px;
+  margin: 0 auto;
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: var(--space-4);
+  padding-right: var(--space-4);
+}
+
+.bottom-nav__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  font-size: 10px;
+  font-weight: 500;
+  height: 100%;
+  flex: none;
+  min-width: 64px;
+  transition: color 0.2s ease;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.bottom-nav__item:hover,
+.bottom-nav__item--active {
+  color: var(--color-accent);
+}
+
+.bottom-nav__icon {
+  width: 24px;
+  height: 24px;
+  margin-bottom: 2px;
+  fill: currentColor;
+}

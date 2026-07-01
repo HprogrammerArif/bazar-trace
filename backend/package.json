@@ -1,0 +1,43 @@
+{
+  "name": "bazar-trace-backend",
+  "version": "0.1.0",
+  "description": "Backend API for Bazar-Trace — PWA inventory & stock management for small shops",
+  "type": "module",
+  "main": "src/server.js",
+  "engines": {
+    "node": ">=18.17.0"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "node --test",
+    "db:migrate": "node src/db/run-migrations.js",
+    "db:seed:admin": "node src/db/seeds/seed-admin.js",
+    "db:seed:dummy": "node src/db/seeds/seed-dummy-data.js"
+  },
+  "keywords": [
+    "inventory",
+    "pwa",
+    "oracle",
+    "express"
+  ],
+  "author": "Arif Hossen",
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "compression": "^1.7.5",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "helmet": "^8.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "morgan": "^1.10.0",
+    "oracledb": "^6.6.0",
+    "uuid": "^11.0.3",
+    "winston": "^3.17.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.7"
+  }
+}
