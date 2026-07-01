@@ -6,7 +6,7 @@ services:
       APP_USER: bazar_user
       APP_USER_PASSWORD: bazar_pass
     ports:
-      - "1521:1521"
+      - "1522:1521"
     healthcheck:
       test: ["CMD", "healthcheck.sh"]
       interval: 30s
