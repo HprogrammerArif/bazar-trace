@@ -33,7 +33,7 @@ export const errorHandler = (err, req, res, _next) => {
     logger.warn(`${appErr.message}`, logPayload);
   }
 
-  res.status(appErr.statusCode).json({
+  const payload = JSON.stringify({
     success: false,
     error: {
       code: appErr.code,
@@ -42,4 +42,10 @@ export const errorHandler = (err, req, res, _next) => {
       ...(env.isProd ? {} : { stack: err.stack }),
     },
   });
+
+  res.writeHead(appErr.statusCode, {
+    'Content-Type': 'application/json',
+    'Content-Length': Buffer.byteLength(payload),
+  });
+  res.end(payload);
 };

@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router } from '../../api/v1/router-helper.js';
 import { authGuard } from '../../middlewares/auth-guard.js';
 import { roleGuard } from '../../middlewares/role-guard.js';
 import { validate } from '../../middlewares/validate.js';

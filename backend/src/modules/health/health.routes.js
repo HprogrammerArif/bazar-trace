@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router } from '../../api/v1/router-helper.js';
 import * as healthController from './health.controller.js';
 
 const router = Router();

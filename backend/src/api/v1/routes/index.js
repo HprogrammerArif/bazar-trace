@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router } from '../router-helper.js';
 import analyticsRoutes from '../../../modules/analytics/analytics.routes.js';
 import authRoutes from '../../../modules/auth/auth.routes.js';
 import healthRoutes from '../../../modules/health/health.routes.js';
