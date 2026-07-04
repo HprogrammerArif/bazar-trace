@@ -1,8 +1,11 @@
 # 🔧 Bazar-Trace — Backend Documentation
 
-> **Stack:** Node.js (ESM) + Express.js + Oracle 21c + Docker  
-> **Architecture:** Clean Architecture — Routes → Controller → Service → Repository  
+> **Stack:** Node.js (ESM, Native http) + Oracle 21c + Docker (Optional)  
+> **Architecture:** Clean Architecture — Routes (Custom Utility) → Controller → Service → Repository  
 > **Status:** Core backend complete (Auth ✅ · Products ✅ · Transactions ✅ · Analytics ✅)
+
+> [!NOTE]
+> This project has been updated to remove **Express.js**, **cors**, **helmet**, and **compression** npm packages to fulfill university zero-dependency guidelines. All routing and middleware pipelining is done natively using Node's standard `node:http` module. For the full local database setup and native code explanation, refer to the [Local Setup & Presentation Guide](file:///c:/Users/workm/Desktop/UN/bazar-trace/docs/local-setup-and-presentation-guide.md).
 
 ---
 
