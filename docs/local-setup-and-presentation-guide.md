@@ -70,6 +70,7 @@ Use this setup when demonstrating the project directly on a host machine without
    cd backend
    npm run db:migrate
    npm run db:seed:admin
+   npm run db:seed:dummy
    npm run dev
    ```
 
