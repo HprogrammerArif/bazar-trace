@@ -10,17 +10,6 @@ This guide is designed for your university presentation. It explains how to run 
 3. [Zero-Dependency Native Backend Architecture](#3-zero-dependency-native-backend-architecture)
 4. [Step-by-Step Request-Response Flow (For Presentation)](#4-step-by-step-request-response-flow-for-presentation)
 
----
-
-## 1. Installing Oracle Database Locally (Windows)
-
-If your university prohibits Docker, you must run Oracle Database directly on your host machine.
-
-### Step 1: Download & Install Oracle XE
-1. Download [Oracle Database 21c Express Edition (XE) for Windows](https://www.oracle.com/database/technologies/xe-downloads.html).
-2. Extract the ZIP file and run the `setup.exe` installer.
-3. During installation, set an administrative password (for `SYS` and `SYSTEM` accounts). **Write this password down!**
-4. The installer will create a default Pluggable Database (PDB) named `XEPDB1` running on port `1521`.
 
 ### Step 2: Configure the Database User & Permissions
 To connect the backend, you must create the user schema matching your `.env` settings.
@@ -46,6 +35,8 @@ To connect the backend, you must create the user schema matching your `.env` set
    ```sql
    EXIT;
    ```
+
+   DROP USER bazar_user CASCADE;
 
 ---
 
@@ -88,24 +79,6 @@ Use this setup when you want to run everything isolated inside containers.
 
 ---
 
-## 3. Zero-Dependency Native Backend Architecture
-
-To satisfy strict academic requirements, the backend does **not** use `express`, `cors`, `helmet`, or `compression` packages. Instead, it relies purely on standard Node.js libraries (`node:http`, `node:zlib`, `node:crypto`).
-
-### Key Infrastructure Files:
-1. [router-helper.js](file:///c:/Users/workm/Desktop/UN/bazar-trace/backend/src/api/v1/router-helper.js):
-   * Custom router builder.
-   * Compiles dynamic URL paths (like `/products/:id`) into regular expressions (`new RegExp()`) to extract path parameters.
-   * Chaining `.use(prefix, subRouter)` allows sub-routing matching exactly like Express.
-2. [app.js](file:///c:/Users/workm/Desktop/UN/bazar-trace/backend/src/app.js):
-   * Sets up `http.createServer`.
-   * Houses vanilla middleware implementations for JSON parsing, logging, security headers (Helmet equivalent), and CORS control.
-   * Executes middlewares sequentially in a recursive pipeline runner using a standard `next(err)` callback structure.
-3. [response.js](file:///c:/Users/workm/Desktop/UN/bazar-trace/backend/src/utils/response.js):
-   * Native JSON wrapper using `res.writeHead` and `res.end`.
-   * Automatically compresses JSON responses using the native `node:zlib` module if the client sends an `Accept-Encoding: gzip` request header.
-
----
 
 ## 4. Step-by-Step Request-Response Flow (For Presentation)
 

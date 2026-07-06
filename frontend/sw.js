@@ -28,6 +28,10 @@ const STATIC_ASSETS = [
   '/js/db/idb.js',
   '/js/sync/sync-manager.js',
   '/js/utils/uuid.js',
+  '/manifest.json',
+  '/favicon.svg',
+  '/icon-192.svg',
+  '/icon-512.svg',
 ];
 
 // 1. Install Event: Cache app shell

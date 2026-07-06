@@ -7,7 +7,7 @@ This document contains your complete presentation slides script and layout, form
 ## Slide 1: Title Slide
 *   **Slide Header:** University of Scholars
 *   **Main Title:** Bazar-Trace: Offline-First PWA Stock & Inventory Management System
-*   **Subtitle:** Built with HTML, CSS, Vanilla JS, Node.js, Express & Oracle Database (Docker)
+*   **Subtitle:** Built with HTML, CSS, Vanilla JS, Node.js (Custom HTTP Server) & Oracle Database (Local)
 *   **Presenter Information:**
     *   **Name:** [Your Name]
     *   **ID/Roll Number:** 231010687
@@ -29,7 +29,7 @@ This document contains your complete presentation slides script and layout, form
     *   **Mobile-First Design:** Optimized for low-end devices and simple mobile browsers.
 *   **Visual Suggestion:** Left column with list bullets; right column showing mock dashboard metrics cards.
 *   **Speaker Notes:**
-    > "Bazar-Trace is a Single Page Application designed to solve retail inventory issues in areas with unstable internet. Unlike standard web platforms, it operates in a fully disconnected environment. The application runs on raw frontend code as required by university guidelines, backed by a Node/Express REST API and Oracle Database containerized with Docker."
+    > "Bazar-Trace is a Single Page Application designed to solve retail inventory issues in areas with unstable internet. Unlike standard web platforms, it operates in a fully disconnected environment. The application runs on raw frontend code as required by university guidelines, backed by a custom Node.js HTTP server — built without Express — and an Oracle Database running natively on the local machine."
 
 ---
 
@@ -64,20 +64,20 @@ This document contains your complete presentation slides script and layout, form
 *   **Diagram:**
 ```mermaid
 graph LR
-    subgraph Client [Client PWA - Hosted on Vercel]
+    subgraph Client [Client PWA]
         UI[Vanilla HTML5/CSS] <--> Router[RegExp Router]
         Router <--> Pages[Page Modules]
         Pages <--> APIClient[Offline-First API Client]
         APIClient <--> IDB[(IndexedDB Cache)]
     end
-    subgraph Server [Backend App - Hosted on Render]
-        APIClient <-->|HTTPS API Calls| Express[Node/Express Server]
-        Express <--> DB[(Oracle DB Container)]
+    subgraph Server [Backend - Custom Node.js HTTP Server]
+        APIClient <-->|HTTP API Calls| NodeServer[Custom http.createServer]
+        NodeServer <--> DB[(Oracle DB - Local Native)]
     end
     SW[Service Worker] <-->|Intercepts/Caches Shell| Client
 ```
 *   **Speaker Notes:**
-    > "This is the architecture of Bazar-Trace. On the client side, a RegExp router serves lazy-loaded pages. The API client communicates with the server, but caches everything in IndexedDB. If the client loses connection, the API client diverts mutations to a local queue. The Service Worker runs in the background, caching all assets so the app loads instantly."
+    > "This is the architecture of Bazar-Trace. On the client side, a RegExp router serves lazy-loaded pages. The API client communicates with the backend, but caches everything in IndexedDB. If the client loses connection, the API client diverts mutations to a local queue. The Service Worker runs in the background, caching all assets so the app loads instantly. The backend is a custom Node.js HTTP server — no Express — connecting to a locally installed Oracle database via oracledb Thin mode."
 
 ---
 
@@ -87,12 +87,12 @@ graph LR
     *   **Frontend Core:** HTML5, CSS Variables layout system, ES6 JavaScript Modules.
     *   **PWA Engine:** Service Worker (Stale-While-Revalidate caching), Browser IndexedDB API.
     *   **Hardware APIs:** Web MediaDevices (`getUserMedia`), Browser Native `BarcodeDetector` API, Web Audio API (Synthesizer).
-    *   **Backend Core:** Node.js, Express.js REST routing framework.
-    *   **Database:** Oracle Database (Always Free OCI VM / Docker).
-    *   **Infrastructure:** Docker & Docker Compose containerization, Vite bundling, Git/GitHub.
-*   **Visual Suggestion:** Grid layout with standard tech icons (HTML, CSS, JS, Node, Oracle, Docker).
+    *   **Backend Core:** Node.js (ESM, `--watch` mode) — **custom `http` server, zero framework**. Hand-built router, middleware pipeline, body parser, CORS handler, and request logger.
+    *   **Database:** Oracle Database XE 21c — running **natively on local machine**, connected via `oracledb` v6 Thin mode (`localhost:1521/XEPDB1`). No Oracle Instant Client required.
+    *   **Infrastructure:** Docker Compose (production stack only), Git/GitHub.
+*   **Visual Suggestion:** Grid layout with standard tech icons (HTML, CSS, JS, Node, Oracle) — replace Docker icon with a local-server icon.
 *   **Speaker Notes:**
-    > "Here is our tech stack. We chose Express for a lightweight REST backend and Oracle Database for secure data storage. The frontend is built on pure web standards. Rather than loading external frameworks, we utilized native APIs like IndexedDB for caching and the native BarcodeDetector API for barcode scanning."
+    > "Here is our tech stack. Instead of using Express.js, we built our own HTTP server on top of Node.js's built-in `http` module — writing all routing, middleware, CORS, and body parsing from scratch. For the database, Oracle XE 21c runs natively on the developer's machine. We use the `oracledb` v6 Thin mode driver, which requires no Oracle Instant Client installation — just a simple connection string. The frontend is built entirely on pure web standards."
 
 ---
 
@@ -134,15 +134,15 @@ graph LR
 graph TD
     User([User: Admin/Staff]) -->|1. Submit Sale/IN| Form[Record View]
     Form -->|2. Check Connectivity| Net{Online?}
-    Net -->|Yes| Backend[Express Backend]
+    Net -->|Yes| Backend[Custom Node.js HTTP Server]
     Net -->|No| IDB[(IndexedDB Sync Queue)]
-    Backend -->|3. Write SQL Transaction| OracleDB[(Oracle Database)]
+    Backend -->|3. Write SQL Transaction| OracleDB[(Oracle DB - Local Native)]
     Backend -->|4. Sync Response| Form
     IDB -->|5. Wait for online Event| Sync[Sync Manager]
     Sync -->|6. Replay FIFO Queue| Backend
 ```
 *   **Speaker Notes:**
-    > "This Level-1 DFD traces the lifecycle of a logged transaction. The cashier submits a sale. The client checks connection. If online, the transaction goes to the backend and writes to Oracle DB. If offline, the transaction is logged in the IndexedDB Sync Queue. Once the browser detects the 'online' event, the Sync Manager replays the queue, pushing updates to the backend."
+    > "This Level-1 DFD traces the lifecycle of a logged transaction. The cashier submits a sale. The client checks connection. If online, the transaction goes to our custom Node.js HTTP server and is written to the locally running Oracle Database. If offline, the transaction is logged in the IndexedDB Sync Queue. Once the browser detects the 'online' event, the Sync Manager replays the queue in FIFO order, pushing updates to the backend."
 
 ---
 
@@ -290,8 +290,8 @@ gantt
 | **Frontend Development** | 45,000 - 60,000 | 0 *(Done by Student)* |
 | **Backend Development** | 60,000 - 80,000 | 0 *(Done by Student)* |
 | **Testing & QA** | 15,000 - 25,000 | 0 *(Done by Student)* |
-| **Production Domain & Hosting** | 5,000 - 10,000 | 0 *(Always Free Tier VM)* |
-| **Oracle Database Cloud Host** | 12,000 - 24,000 | 0 *(OCI Always Free VM)* |
+| **Production Domain & Hosting** | 5,000 - 10,000 | 0 *(Local machine / dev environment)* |
+| **Oracle Database (Local Install)** | 12,000 - 24,000 | 0 *(Oracle XE 21c — free local install)* |
 | **Total Estimation** | **147,000 - 214,000 BDT** | **0 BDT (Academic Project)** |
 
 *   **Speaker Notes:**
