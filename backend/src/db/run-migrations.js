@@ -45,7 +45,13 @@ async function recordApplied(conn, id) {
 }
 
 async function run() {
-  await initDbPool();
+  const ready = await initDbPool();
+  if (!ready) {
+    throw new Error(
+      'Oracle DB is not reachable. Start Oracle XE and ensure it is listening on ' +
+        (process.env.ORACLE_CONNECT_STRING ?? 'localhost:1521/XEPDB1'),
+    );
+  }
   const files = (await fs.readdir(MIGRATIONS_DIR))
     .filter((f) => f.endsWith('.sql'))
     .sort();
