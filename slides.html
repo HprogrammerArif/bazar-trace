@@ -1,586 +1,1029 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bazar-Trace Presentation Slides</title>
-  
-  <!-- Reveal.js styles -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/reveal.css">
-  
-  <!-- Custom Slate & Indigo Theme matching Bazar-Trace Design system -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bazar-Trace — Defense Presentation</title>
   <style>
+    /* ===== Google Fonts ===== */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+    /* ===== CSS Reset ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ===== Design Tokens ===== */
     :root {
-      --r-background-color: #0f172a;
-      --r-main-font: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      --r-main-font-size: 36px;
-      --r-main-color: #f1f5f9;
-      --r-heading-font: 'Inter', sans-serif;
-      --r-heading-color: #ffffff;
-      --r-heading-font-weight: 700;
-      --r-heading-text-transform: none;
-      --r-link-color: #6366f1;
-      --r-link-color-hover: #4f46e5;
-      
-      /* Bazar-Trace custom colors */
-      --color-surface: #1e293b;
-      --color-accent: #6366f1;
-      --color-border: #334155;
-      --color-success: #22c55e;
-      --color-warning: #f59e0b;
-      --color-danger: #ef4444;
-      --color-text-muted: #94a3b8;
+      --bg-deep:      #0a0e1a;
+      --bg-primary:   #0f172a;
+      --bg-surface:   #1e293b;
+      --bg-elevated:  #334155;
+      --accent:       #6366f1;
+      --accent-light: #818cf8;
+      --accent-glow:  rgba(99, 102, 241, 0.15);
+      --success:      #22c55e;
+      --warning:      #f59e0b;
+      --danger:       #ef4444;
+      --text-primary: #f1f5f9;
+      --text-muted:   #94a3b8;
+      --text-dim:     #64748b;
+      --border:       #334155;
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     }
 
-    .reveal {
-      font-family: var(--r-main-font);
-      background-color: var(--r-background-color);
-      color: var(--r-main-color);
+    html {
+      font-family: var(--font);
+      background: var(--bg-deep);
+      color: var(--text-primary);
+      -webkit-font-smoothing: antialiased;
     }
 
-    .reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
-      color: var(--r-heading-color);
-      font-weight: var(--r-heading-font-weight);
-      text-transform: var(--r-heading-text-transform);
-      margin-bottom: 20px;
+    /* ===== Slide Container ===== */
+    .slide {
+      width: 960px;
+      min-height: 540px;
+      margin: 40px auto;
+      background: var(--bg-primary);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      padding: 48px 56px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(99, 102, 241, 0.05);
+      page-break-after: always;
+      page-break-inside: avoid;
+    }
+    .slide::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-light), #a78bfa);
     }
 
-    /* Slides structure custom utility */
-    .slide-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 30px;
+    /* ===== Slide Number Badge ===== */
+    .slide-num {
+      position: absolute;
+      bottom: 20px; right: 28px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-dim);
+      letter-spacing: 0.5px;
+    }
+
+    /* ===== Title Slide ===== */
+    .slide--title {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
       align-items: center;
-      text-align: left;
+      text-align: center;
+      min-height: 540px;
+      background: linear-gradient(135deg, #0f172a 0%, #1a1e3a 50%, #1e1b4b 100%);
     }
-
-    .card {
-      background-color: var(--color-surface);
-      border: 1px solid var(--color-border);
-      border-radius: 12px;
-      padding: 24px;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    .slide--title::after {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 600px; height: 600px;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+      pointer-events: none;
     }
-
-    .card-title {
-      font-weight: 700;
-      font-size: 24px;
-      margin-bottom: 12px;
-      color: var(--color-accent);
-    }
-
-    .badge {
-      display: inline-block;
-      font-size: 14px;
-      font-weight: 700;
-      padding: 4px 10px;
-      border-radius: 6px;
+    .university-header {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 3px;
       text-transform: uppercase;
-      margin-top: 4px;
+      color: var(--accent-light);
+      margin-bottom: 24px;
+      position: relative;
+      z-index: 1;
     }
-    
-    .badge--success { background-color: rgba(34, 197, 94, 0.15); color: var(--color-success); }
-    .badge--warning { background-color: rgba(245, 158, 11, 0.15); color: var(--color-warning); }
-    .badge--danger { background-color: rgba(239, 68, 68, 0.15); color: var(--color-danger); }
-    .badge--neutral { background-color: rgba(148, 163, 184, 0.15); color: var(--color-text-muted); }
+    .main-title {
+      font-size: 32px;
+      font-weight: 800;
+      line-height: 1.25;
+      max-width: 700px;
+      background: linear-gradient(135deg, #f1f5f9 0%, #c7d2fe 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 16px;
+      position: relative;
+      z-index: 1;
+    }
+    .subtitle {
+      font-size: 14px;
+      color: var(--text-muted);
+      font-weight: 400;
+      margin-bottom: 36px;
+      position: relative;
+      z-index: 1;
+    }
+    .presenter-info {
+      display: flex;
+      gap: 32px;
+      font-size: 13px;
+      color: var(--text-muted);
+      position: relative;
+      z-index: 1;
+    }
+    .presenter-info div { display: flex; flex-direction: column; gap: 4px; }
+    .presenter-info strong { color: var(--text-primary); font-weight: 600; }
+    .presenter-info .label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--accent-light);
+    }
 
-    ul {
+    /* ===== Content Slides ===== */
+    .slide-title {
       font-size: 26px;
+      font-weight: 700;
+      margin-bottom: 28px;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .slide-title .icon {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      background: var(--accent-glow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    /* ===== Bullet Lists ===== */
+    .content-list {
+      list-style: none;
+      padding: 0;
+    }
+    .content-list > li {
+      padding: 10px 0 10px 28px;
+      position: relative;
+      font-size: 14px;
       line-height: 1.6;
-      margin-left: 30px !important;
-      color: #cbd5e1;
+      color: var(--text-primary);
+      border-bottom: 1px solid rgba(51, 65, 85, 0.4);
+    }
+    .content-list > li:last-child { border-bottom: none; }
+    .content-list > li::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 16px;
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+    .content-list > li strong {
+      color: var(--accent-light);
+      font-weight: 600;
+    }
+    .content-list .sub {
+      list-style: none;
+      padding: 6px 0 0 20px;
+    }
+    .content-list .sub li {
+      font-size: 13px;
+      color: var(--text-muted);
+      padding: 3px 0;
+      position: relative;
+      padding-left: 16px;
+    }
+    .content-list .sub li::before {
+      content: '—';
+      position: absolute;
+      left: 0;
+      color: var(--text-dim);
     }
 
-    li {
-      margin-bottom: 10px;
+    /* ===== Numbered Lists ===== */
+    .numbered-list {
+      list-style: none;
+      padding: 0;
+      counter-reset: item;
     }
-
-    .accent-text {
-      color: var(--color-accent);
+    .numbered-list > li {
+      padding: 10px 0 10px 40px;
+      position: relative;
+      font-size: 14px;
+      line-height: 1.6;
+      counter-increment: item;
+      border-bottom: 1px solid rgba(51, 65, 85, 0.4);
+    }
+    .numbered-list > li:last-child { border-bottom: none; }
+    .numbered-list > li::before {
+      content: counter(item);
+      position: absolute;
+      left: 0; top: 10px;
+      width: 26px; height: 26px;
+      border-radius: 8px;
+      background: var(--accent-glow);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      color: var(--accent-light);
+      font-size: 12px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .numbered-list > li strong {
+      color: var(--accent-light);
       font-weight: 600;
     }
 
-    /* Table override styles */
-    .reveal table {
-      font-size: 22px !important;
-      border-collapse: collapse;
-      width: 100%;
+    /* ===== Tech Grid ===== */
+    .tech-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
     }
-
-    .reveal table th {
-      background-color: var(--color-surface);
-      color: var(--color-accent);
-      border-bottom: 2px solid var(--color-border) !important;
+    .tech-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+    .tech-card .tech-label {
+      font-size: 10px;
       font-weight: 700;
-      padding: 10px 15px !important;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--accent-light);
+      margin-bottom: 6px;
+    }
+    .tech-card p {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
     }
 
-    .reveal table td {
-      border-bottom: 1px solid var(--color-border) !important;
-      padding: 10px 15px !important;
+    /* ===== Split Layout ===== */
+    .split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    .split-col h3 {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--accent-light);
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--accent);
     }
 
-    /* Mermaid center helpers */
-    .mermaid-container {
-      background-color: white;
+    /* ===== SWOT Grid ===== */
+    .swot-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .swot-card {
+      background: var(--bg-surface);
+      border-radius: 10px;
+      padding: 16px;
+      border-left: 3px solid;
+    }
+    .swot-card.s { border-color: var(--success); }
+    .swot-card.w { border-color: var(--danger); }
+    .swot-card.o { border-color: #3b82f6; }
+    .swot-card.t { border-color: var(--warning); }
+    .swot-card h4 {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+    .swot-card.s h4 { color: var(--success); }
+    .swot-card.w h4 { color: var(--danger); }
+    .swot-card.o h4 { color: #3b82f6; }
+    .swot-card.t h4 { color: var(--warning); }
+    .swot-card ul {
+      list-style: none;
+      padding: 0;
+    }
+    .swot-card li {
+      font-size: 12px;
+      color: var(--text-muted);
+      padding: 3px 0;
+      line-height: 1.5;
+    }
+
+    /* ===== Data Table ===== */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    .data-table th {
+      text-align: left;
+      padding: 10px 12px;
+      background: var(--bg-surface);
+      color: var(--accent-light);
+      font-weight: 600;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border-bottom: 2px solid var(--accent);
+    }
+    .data-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(51, 65, 85, 0.4);
+      color: var(--text-muted);
+    }
+    .data-table tr:last-child td {
+      border-bottom: none;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    /* ===== Code Block ===== */
+    .code-block {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px 20px;
+      font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+      font-size: 11.5px;
+      line-height: 1.7;
+      color: #e2e8f0;
+      overflow-x: auto;
+      white-space: pre;
+    }
+    .code-block .kw { color: #c084fc; }
+    .code-block .type { color: #38bdf8; }
+    .code-block .str { color: #86efac; }
+    .code-block .comment { color: #64748b; font-style: italic; }
+    .code-block .num { color: #fbbf24; }
+
+    /* ===== Diagram Placeholder ===== */
+    .diagram-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
       border-radius: 12px;
-      padding: 15px;
+      padding: 24px;
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-muted);
+      position: relative;
+    }
+    .diagram-box .diagram-label {
+      position: absolute;
+      top: 10px; left: 14px;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--accent-light);
+      background: var(--bg-primary);
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+    .diagram-nodes {
       display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      padding: 8px 0;
+    }
+    .d-node {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    .d-node.accent {
+      background: var(--accent-glow);
+      border-color: rgba(99, 102, 241, 0.3);
+      color: var(--accent-light);
+    }
+    .d-node.db {
+      border-radius: 8px 8px 16px 16px;
+      background: rgba(34, 197, 94, 0.08);
+      border-color: rgba(34, 197, 94, 0.3);
+      color: var(--success);
+    }
+    .d-arrow { color: var(--text-dim); font-size: 16px; }
+
+    /* ===== Thank You Slide ===== */
+    .slide--thanks {
+      display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
-      width: 90%;
-      margin: 0 auto;
-      min-height: 400px;
+      text-align: center;
+      min-height: 540px;
+      background: linear-gradient(135deg, #0f172a 0%, #1a1e3a 50%, #1e1b4b 100%);
+    }
+    .slide--thanks::after {
+      content: '';
+      position: absolute;
+      bottom: -100px; right: -100px;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, var(--accent-glow) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .thanks-title {
+      font-size: 48px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #f1f5f9 0%, var(--accent-light) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 24px;
+      position: relative;
+      z-index: 1;
     }
 
-    .mermaid {
-      transform: scale(0.95);
-      transform-origin: center center;
+    /* ===== ER Diagram Table Style ===== */
+    .er-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
     }
-
-    /* Code layout container */
-    .reveal pre {
+    .er-table {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
       border-radius: 10px;
-      box-shadow: none !important;
+      overflow: hidden;
+    }
+    .er-table .er-header {
+      background: var(--accent-glow);
+      border-bottom: 2px solid var(--accent);
+      padding: 10px 14px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--accent-light);
+      text-align: center;
+    }
+    .er-table .er-row {
+      padding: 4px 14px;
+      font-size: 11px;
+      color: var(--text-muted);
+      border-bottom: 1px solid rgba(51, 65, 85, 0.3);
+      display: flex;
+      justify-content: space-between;
+    }
+    .er-table .er-row:last-child { border-bottom: none; }
+    .er-table .er-row .pk { color: var(--warning); font-weight: 600; font-size: 9px; }
+    .er-table .er-row .fk { color: #3b82f6; font-weight: 600; font-size: 9px; }
+    .er-table .er-row .uk { color: var(--success); font-weight: 600; font-size: 9px; }
+
+    /* ===== Gantt-style timeline ===== */
+    .timeline { padding: 8px 0; }
+    .timeline-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .timeline-label {
+      width: 200px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+    .timeline-bar-container {
+      flex: 1;
+      position: relative;
+      height: 24px;
+    }
+    .timeline-bar {
+      position: absolute;
+      height: 24px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 600;
+      color: white;
+    }
+
+    /* ===== Print Styles ===== */
+    @media print {
+      html { background: white; }
+      body { margin: 0; padding: 0; }
+      .slide {
+        margin: 0;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+        page-break-after: always;
+        width: 100%;
+        min-height: 100vh;
+      }
+      .slide::before { display: none; }
+      .slide-num { color: #999; }
+    }
+
+    /* ===== Page break hint ===== */
+    @page {
+      size: 960px 540px landscape;
       margin: 0;
-      font-size: 16px;
-      width: 100%;
     }
   </style>
-
-  <!-- Mermaid.js for drawing diagrams directly in slides -->
-  <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
-  <script>
-    mermaid.initialize({
-      startOnLoad: true,
-      theme: 'default',
-      securityLevel: 'loose',
-      flowchart: { useMaxWidth: true, htmlLabels: true }
-    });
-  </script>
 </head>
 <body>
-  <div class="reveal">
-    <div class="slides">
 
-      <!-- Slide 1: Title Slide -->
-      <section>
-        <div style="text-align: center; padding: 20px;">
-          <h4 style="color: var(--color-text-muted); font-size: 24px; letter-spacing: 2px; margin-bottom: 30px;">UNIVERSITY OF SCHOLARS</h4>
-          <h1 style="font-size: 54px; margin-bottom: 20px;">Bazar-Trace</h1>
-          <h3 style="font-size: 28px; color: var(--color-text-muted); margin-bottom: 50px;">
-            Offline-First PWA Stock & Inventory Management System
-          </h3>
-          
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 50px; font-size: 20px; text-align: left; border-top: 1px solid var(--color-border); padding-top: 30px;">
-            <div>
-              <p><span class="accent-text">Presented By:</span></p>
-              <p style="font-weight: 700; font-size: 24px; margin: 5px 0;">[Your Name]</p>
-              <p>ID: 231010687</p>
-              <p>Dept of Computer Science & Engineering</p>
-            </div>
-            <div style="text-align: right;">
-              <p><span class="accent-text">Supervised By:</span></p>
-              <p style="font-weight: 700; font-size: 24px; margin: 5px 0;">Reduanul Bari Subhon</p>
-              <p>Department of CSE</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Slide 2: What is Bazar-Trace? -->
-      <section>
-        <h2>What is Bazar-Trace?</h2>
-        <div class="slide-grid">
-          <div>
-            <ul>
-              <li>A <span class="accent-text">Single Page Application (SPA)</span> built purely using raw HTML5, Vanilla CSS, and modular ES6 JavaScript.</li>
-              <li>Implements an <span class="accent-text">Offline-First Engine</span> to guarantee sales logging during internet drops.</li>
-              <li>Runs local product lookups and scans via hardware integrations.</li>
-              <li>Secured with role-based access controllers.</li>
-            </ul>
-          </div>
-          <div class="card">
-            <div class="card-title">Core Performance Metrics</div>
-            <div style="font-size: 20px; line-height: 1.8;">
-              <p>✓ Uptime: <strong>100% Offline Resilience</strong></p>
-              <p>✓ Size: <strong>Minimal static bundle shell</strong></p>
-              <p>✓ Client Cache: <strong>Asynchronous IndexedDB</strong></p>
-              <p>✓ Relational Core: <strong>Oracle DB Integrations</strong></p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Slide 3: Motivation -->
-      <section>
-        <h2>Motivation & Problem Statement</h2>
-        <div class="slide-grid">
-          <div>
-            <ol style="font-size: 24px; line-height: 1.8; color: #cbd5e1;">
-              <li style="margin-bottom: 20px;">
-                <strong style="color: white;">Unstable Connectivity:</strong><br>
-                Retail shops in Bangladesh frequently lose internet access, disabling normal cloud systems.
-              </li>
-              <li style="margin-bottom: 20px;">
-                <strong style="color: white;">Heavy Software Costs:</strong><br>
-                Small businesses cannot afford costly licenses or local server setups.
-              </li>
-              <li>
-                <strong style="color: white;">Library Dependencies Constraint:</strong><br>
-                Proving that critical sync logic can be built without heavy framework layers (React/Next.js).
-              </li>
-            </ol>
-          </div>
-          <div class="card" style="border-left: 4px solid var(--color-danger);">
-            <div class="card-title" style="color: var(--color-danger);">The Cost of Offline Outages</div>
-            <p style="font-size: 18px; line-height: 1.6; color: var(--color-text-muted);">
-              "If a store loses connection for even 30 minutes during rush hour, inventory counts mismatch, receipts cannot compile, and checkout queues stall."
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <!-- Slide 4: Project Goals -->
-      <section>
-        <h2>Project Goals</h2>
-        <div class="slide-grid" style="grid-template-columns: 1.2fr 0.8fr;">
-          <div>
-            <ul>
-              <li><span class="accent-text">Zero Latency Checkout:</span> Enable immediate invoice inputs and product queries local to the machine.</li>
-              <li><span class="accent-text">FIFO Sync Queue:</span> Queue database updates and drain automatically when networks restore.</li>
-              <li><span class="accent-text">Hardware Scanning:</span> Utilize camera permissions for instant product identification.</li>
-              <li><span class="accent-text">Educational Focus:</span> Maximize understanding of raw browser web APIs (Service Worker, Web Audio, Canvas).</li>
-            </ul>
-          </div>
-          <div style="display: flex; flex-direction: column; gap: 15px;">
-            <div class="card" style="text-align: center; padding: 15px;">
-              <span class="badge badge--success" style="font-size: 18px;">Offline Logs</span>
-            </div>
-            <div class="card" style="text-align: center; padding: 15px;">
-              <span class="badge badge--warning" style="font-size: 18px;">PWA Installable</span>
-            </div>
-            <div class="card" style="text-align: center; padding: 15px;">
-              <span class="badge badge--neutral" style="font-size: 18px;">Oracle DB</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Slide 5: High-Level Architecture -->
-      <section>
-        <h3>System Architecture Diagram</h3>
-        <div class="mermaid-container">
-          <div class="mermaid">
-            graph TD
-              subgraph Browser [Client PWA - Vercel CDN]
-                UI[Vanilla HTML5/CSS] <--> Router[RegExp Router]
-                Router <--> Pages[SPA Page Modules]
-                Pages <--> APIClient[Offline-First API Client]
-                APIClient <--> IDB[(IndexedDB Cache)]
-              end
-              subgraph API [Backend App - Render Host]
-                APIClient <-->|HTTPS API Calls| Express[Node/Express Server]
-                Express <--> DB[(Oracle DB Instance)]
-              end
-              SW[Service Worker] <-->|Intercepts/Caches Shell| Browser
-          </div>
-        </div>
-      </section>
-
-      <!-- Slide 6: Technology Used -->
-      <section>
-        <h2>Technology Stack</h2>
-        <div class="slide-grid">
-          <div class="card">
-            <div class="card-title">Frontend Core</div>
-            <div style="font-size: 20px; line-height: 1.8;">
-              <p>• <strong>HTML5 & Custom CSS Variables</strong></p>
-              <p>• <strong>ES6 JS Modules</strong> (Vanilla)</p>
-              <p>• <strong>Service Worker</strong> (Dynamic cache shell)</p>
-              <p>• <strong>IndexedDB</strong> (Promise local storage)</p>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-title">Backend & Infrastructure</div>
-            <div style="font-size: 20px; line-height: 1.8;">
-              <p>• <strong>Node.js & Express.js</strong> REST API</p>
-              <p>• <strong>Oracle Database</strong> (Docker / OCI)</p>
-              <p>• <strong>Vite</strong> (Fast static bundler)</p>
-              <p>• <strong>Web APIs</strong> (Camera, Web Audio, Canvas)</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Slide 7: Functional Requirements -->
-      <section>
-        <h2>Functional Requirements</h2>
-        <div style="margin-top: 30px;">
-          <table>
-            <thead>
-              <tr>
-                <th>Module</th>
-                <th>Role: STAFF / CASHIER</th>
-                <th>Role: ADMINISTRATOR</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>Inventory view</strong></td>
-                <td>Search and read stock levels</td>
-                <td>Add, Edit, Set Stock thresholds, Delete products</td>
-              </tr>
-              <tr>
-                <td><strong>Checkout Form</strong></td>
-                <td>Log sales and Received quantities</td>
-                <td>Log transactions & overwrite list unit values</td>
-              </tr>
-              <tr>
-                <td><strong>Security</strong></td>
-                <td>Login & Change personal password</td>
-                <td>Access Staff Directory, register accounts, disable users</td>
-              </tr>
-              <tr>
-                <td><strong>Analytics</strong></td>
-                <td>Read general lists</td>
-                <td>View canvas sales chart & Net Profits</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      <!-- Slide 8: Non-Functional Requirements -->
-      <section>
-        <h2>Non-Functional Requirements</h2>
-        <div class="slide-grid">
-          <div class="card" style="border-top: 3px solid var(--color-success);">
-            <div class="card-title">Security & Reliability</div>
-            <div style="font-size: 18px; line-height: 1.6; color: var(--color-text-muted);">
-              <p>• <strong>Bcrypt Hashing:</strong> Credentials encrypted before database storage.</p>
-              <p>• <strong>JWT validation:</strong> API routes secure.</p>
-              <p>• <strong>Conflict Safety:</strong> IDempotent unique keys prevent retry logs duplication.</p>
-            </div>
-          </div>
-          <div class="card" style="border-top: 3px solid var(--color-accent);">
-            <div class="card-title">Performance & Usability</div>
-            <div style="font-size: 18px; line-height: 1.6; color: var(--color-text-muted);">
-              <p>• <strong>Render limits:</strong> Under 50ms layout paint cycles.</p>
-              <p>• <strong>Stale-While-Revalidate:</strong> Instant offline screen startups.</p>
-              <p>• <strong>Responsive layouts:</strong> Desktop max-width constraints centered.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Slide 9: Data Flow Diagram (DFD Level-1) -->
-      <section>
-        <h3>Data Flow Diagram (Level-1)</h3>
-        <div class="mermaid-container">
-          <div class="mermaid">
-            graph TD
-              User([User: Admin/Staff]) -->|1. Record Sale| Form[SPA Record View]
-              Form -->|2. Check connection| Net{Browser Online?}
-              Net -->|Yes| Backend[Express REST API]
-              Net -->|No| IDB[(IndexedDB Sync Queue)]
-              Backend -->|3. Write Transaction SQL| Oracle[(Oracle Database)]
-              Backend -->|4. Response envelope| Form
-              IDB -->|5. Online event fires| Sync[Sync Manager]
-              Sync -->|6. Replay FIFO Queue| Backend
-          </div>
-        </div>
-      </section>
-
-      <!-- Slide 10: Entity Relationship (ER) Diagram -->
-      <section>
-        <h3>Entity Relationship (ER) Diagram</h3>
-        <div class="mermaid-container">
-          <div class="mermaid">
-            erDiagram
-              USERS {
-                  number id PK
-                  string email UK
-                  string password_hash
-                  string role
-                  boolean is_active
-              }
-              PRODUCTS {
-                  number id PK
-                  string sku UK
-                  string name
-                  number stock
-                  number cost_price
-                  number sell_price
-                  number low_stock_threshold
-                  date expiry_date
-              }
-              TRANSACTIONS {
-                  number id PK
-                  string client_txn_id UK
-                  number product_id FK
-                  number user_id FK
-                  string txn_type
-                  number quantity
-                  number unit_price
-                  timestamp occurred_at
-              }
-              USERS ||--o{ PRODUCTS : "creates"
-              USERS ||--o{ TRANSACTIONS : "performs"
-              PRODUCTS ||--o{ TRANSACTIONS : "receives"
-          </div>
-        </div>
-      </section>
-
-      <!-- Slide 11: Database Design (DDL Schema) -->
-      <section>
-        <h3>Database Schema Configuration</h3>
-        <div style="display: flex; flex-direction: column; gap: 15px; width: 100%;">
-          <pre><code class="language-sql" style="background-color: var(--color-surface); color: #cbd5e1; border: 1px solid var(--color-border); padding: 15px; display: block; line-height: 1.4;">
-CREATE TABLE products (
-  id NUMBER GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
-  sku VARCHAR2(50) UNIQUE NOT NULL,
-  barcode VARCHAR2(100),
-  name VARCHAR2(150) NOT NULL,
-  stock NUMBER DEFAULT 0 NOT NULL,
-  cost_price NUMBER(10,2) NOT NULL,
-  sell_price NUMBER(10,2) NOT NULL,
-  low_stock_threshold NUMBER DEFAULT 5 NOT NULL,
-  expiry_date DATE
-);
-
-CREATE TABLE transactions (
-  id NUMBER GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
-  client_txn_id VARCHAR2(50) UNIQUE NOT NULL,
-  product_id NUMBER REFERENCES products(id),
-  user_id NUMBER REFERENCES users(id),
-  txn_type VARCHAR2(10) CHECK (txn_type IN ('IN', 'OUT')),
-  quantity NUMBER NOT NULL,
-  unit_price NUMBER(10,2) NOT NULL,
-  occurred_at TIMESTAMP DEFAULT SYSTIMESTAMP
-);
-          </code></pre>
-        </div>
-      </section>
-
-      <!-- Slide 12: Gantt Chart -->
-      <section>
-        <h3>Project Development Timeline</h3>
-        <div class="mermaid-container">
-          <div class="mermaid">
-            gantt
-                title Development Gantt Timeline
-                dateFormat  YYYY-MM-DD
-                section Architecture
-                Spec & DB Schema Design     :done,    des1, 2026-06-01, 2026-06-05
-                section Backend
-                REST API (Zod & Bcrypt)     :done,    des2, 2026-06-06, 2026-06-14
-                section Frontend
-                Vanilla SPA Layouts         :done,    des3, 2026-06-15, 2026-06-20
-                IndexedDB & SW Offline Sync :done,    des4, 2026-06-21, 2026-06-25
-                section Audits
-                Integration & Final Tests   :done,    des5, 2026-06-26, 2026-06-28
-          </div>
-        </div>
-      </section>
-
-      <!-- Slide 13: SWOT Analysis -->
-      <section>
-        <h2>SWOT Analysis</h2>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 18px;">
-          <div class="card" style="border-left: 4px solid var(--color-success);">
-            <div class="card-title" style="color: var(--color-success);">Strengths (S)</div>
-            <p>• 100% offline uptime guarantee</p>
-            <p>• Zero framework overhead (high speed)</p>
-            <p>• Idempotent queue sync checks</p>
-          </div>
-          <div class="card" style="border-left: 4px solid var(--color-danger);">
-            <div class="card-title" style="color: var(--color-danger);">Weaknesses (W)</div>
-            <p>• Local DB updates rely on sync triggers</p>
-            <p>• Camera scan depends on browser support</p>
-          </div>
-          <div class="card" style="border-left: 4px solid var(--color-warning);">
-            <div class="card-title" style="color: var(--color-warning);">Opportunities (O)</div>
-            <p>• Expand into multi-terminal retail cash registers</p>
-            <p>• Direct thermal receipt printers binding</p>
-          </div>
-          <div class="card" style="border-left: 4px solid var(--color-text-muted);">
-            <div class="card-title" style="color: var(--color-text-muted);">Threats (T)</div>
-            <p>• Browser cache wipes delete un-synced queue items</p>
-            <p>• HTTPS restrictions for getUserMedia APIs</p>
-          </div>
-        </div>
-      </section>
-
-      <!-- Slide 14: Project Cost Analysis -->
-      <section>
-        <h2>Project Cost Estimation</h2>
-        <div style="margin-top: 20px;">
-          <table>
-            <thead>
-              <tr>
-                <th>Category</th>
-                <th>Standard Cost (BDT)</th>
-                <th>Actual Solo Cost (BDT)</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>Design & UI/UX UI System</strong></td>
-                <td>10,000 - 15,000</td>
-                <td>0 BDT *(Done by Student)*</td>
-              </tr>
-              <tr>
-                <td><strong>Frontend Development</strong></td>
-                <td>45,000 - 60,000</td>
-                <td>0 BDT *(Done by Student)*</td>
-              </tr>
-              <tr>
-                <td><strong>Backend API Core</strong></td>
-                <td>60,000 - 80,000</td>
-                <td>0 BDT *(Done by Student)*</td>
-              </tr>
-              <tr>
-                <td><strong>Database OCI Cloud VM Hosting</strong></td>
-                <td>12,000 - 24,000</td>
-                <td>0 BDT *(Always Free VM)*</td>
-              </tr>
-              <tr style="font-weight: 700; color: var(--color-success);">
-                <td><strong>Total Project Cost</strong></td>
-                <td><strong>147,000 - 214,000 BDT</strong></td>
-                <td><strong>0 BDT (Academic Project)</strong></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      <!-- Slide 15: Conclusion & Thank You -->
-      <section style="text-align: center;">
-        <h1 style="font-size: 80px; color: var(--color-accent); margin-bottom: 40px;">Thank You</h1>
-        <p style="font-size: 28px; color: var(--color-text-muted); max-width: 800px; margin: 0 auto 50px;">
-          "Bazar-Trace demonstrates that robust, production-ready, offline-first systems can be fully realized using pure web standard APIs."
-        </p>
-        <div style="font-size: 20px; color: #cbd5e1; border-top: 1px solid var(--color-border); padding-top: 30px; display: inline-block;">
-          <p><strong>[Your Name]</strong> | ID: 231010687</p>
-          <p style="font-size: 16px; color: var(--color-text-muted); margin-top: 5px;">University of Scholars — CSE Capstone Project</p>
-        </div>
-      </section>
-
+<!-- ============================================================ -->
+<!-- SLIDE 1: Title -->
+<!-- ============================================================ -->
+<div class="slide slide--title">
+  <div class="university-header">University of Scholars</div>
+  <h1 class="main-title">Bazar-Trace: Offline-First PWA<br>Stock &amp; Inventory Management System</h1>
+  <p class="subtitle">Built with HTML, CSS, Vanilla JS, Node.js (Custom HTTP Server) &amp; Oracle Database (Local)</p>
+  <div class="presenter-info">
+    <div>
+      <span class="label">Presenter</span>
+      <strong>Arif Hossen</strong>
+      <span>ID: 231010687 · CSE</span>
+    </div>
+    <div>
+      <span class="label">Supervisor</span>
+      <strong>Reduanul Bari Subhon sir</strong>
+    </div>
+    <div>
+      <span class="label">Mentor</span>
+      <strong>Israt Jahan miss</strong>
     </div>
   </div>
+  <span class="slide-num">1 / 15</span>
+</div>
 
-  <!-- Reveal.js script library -->
-  <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/reveal.js"></script>
-  <script>
-    // Initialize reveal slideshow configuration
-    Reveal.initialize({
-      controls: true,
-      progress: true,
-      center: true,
-      hash: true,
-      transition: 'slide', // none/fade/slide/convex/concave/zoom
-    });
-  </script>
+<!-- ============================================================ -->
+<!-- SLIDE 2: What is Bazar-Trace? -->
+<!-- ============================================================ -->
+<div class="slide">
+  <h2 class="slide-title"><span class="icon">📦</span> What is Bazar-Trace?</h2>
+  <ul class="content-list">
+    <li><strong>Vanilla Single Page Application</strong> — An SPA built purely with raw ES Modules, HTML5, and CSS variables (no React, Next.js, or Tailwind CSS).</li>
+    <li><strong>Offline-First Sync Engine</strong> — Continues recording transactions and looking up products even when the internet drops completely.</li>
+    <li><strong>Role-Based Security</strong> — Strict separation of admin management and staff registry options.</li>
+    <li><strong>Mobile-First Design</strong> — Optimized for low-end devices and simple mobile browsers.</li>
+  </ul>
+  <span class="slide-num">2 / 15</span>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 3: Motivation -->
+<!-- ============================================================ -->
+<div class="slide">
+  <h2 class="slide-title"><span class="icon">💡</span> Motivation &amp; Problem Statement</h2>
+  <ol class="numbered-list">
+    <li><strong>Internet Instability</strong> — Retail shops in Bangladesh frequently suffer from network drops, rendering standard cloud tools unusable.</li>
+    <li><strong>High Overhead Costs</strong> — Small store owners cannot afford expensive desktop setups or heavy software licenses.</li>
+    <li><strong>UI/UX Clutter</strong> — Existing ERP and inventory portals are too complex for non-technical cashiers.</li>
+    <li><strong>Academic Constraint</strong> — The challenge of building sophisticated offline sync and real-time canvas charting without heavy third-party libraries.</li>
+  </ol>
+  <span class="slide-num">3 / 15</span>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 4: Project Goals -->
+<!-- ============================================================ -->
+<div class="slide">
+  <h2 class="slide-title"><span class="icon">🎯</span> Project Goals</h2>
+  <ol class="numbered-list">
+    <li><strong>Zero Downtime</strong> — Enable cashiers to record Sales (OUT) and Stock received (IN) with zero latency during offline states.</li>
+    <li><strong>Conflict-Free Auto Synchronization</strong> — Replay offline mutations in strict FIFO order on network recovery, handling sync retries idempotently.</li>
+    <li><strong>Hardware Integrations</strong> — Access native camera modules for barcode scanning and trigger synthesized audio scan beeps.</li>
+    <li><strong>Resource Constraints Compliance</strong> — Build the entire system under strict university guidelines (Vanilla CSS, raw JS, Oracle DB).</li>
+  </ol>
+  <span class="slide-num">4 / 15</span>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 5: Architecture -->
+<!-- ============================================================ -->
+<div class="slide">
+  <h2 class="slide-title"><span class="icon">🏗️</span> High-Level Architecture</h2>
+  <div class="diagram-box">
+    <span class="diagram-label">System Architecture</span>
+    <div style="display: flex; gap: 20px; align-items: flex-start; padding-top: 20px;">
+      <!-- Client side -->
+      <div style="flex: 1; border: 1px solid var(--border); border-radius: 10px; padding: 14px; background: rgba(99,102,241,0.04);">
+        <div style="font-size: 10px; font-weight: 700; color: var(--accent-light); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;">Client PWA</div>
+        <div class="diagram-nodes" style="flex-direction: column; gap: 6px;">
+          <div class="d-node">Vanilla HTML5 / CSS</div>
+          <span class="d-arrow">↕</span>
+          <div class="d-node accent">RegExp Router + Lazy Modules</div>
+          <span class="d-arrow">↕</span>
+          <div class="d-node">Offline-First API Client</div>
+          <span class="d-arrow">↕</span>
+          <div class="d-node db" style="border-radius: 8px;">IndexedDB Cache</div>
+        </div>
+      </div>
+      <!-- Arrow -->
+      <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 4px; padding-top: 60px;">
+        <span style="color: var(--accent-light); font-size: 12px; font-weight: 600;">HTTP</span>
+        <span class="d-arrow">⟷</span>
+      </div>
+      <!-- Server side -->
+      <div style="flex: 1; border: 1px solid var(--border); border-radius: 10px; padding: 14px; background: rgba(34,197,94,0.04);">
+        <div style="font-size: 10px; font-weight: 700; color: var(--success); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;">Backend — Custom Node.js Server</div>
+        <div class="diagram-nodes" style="flex-direction: column; gap: 6px;">
+          <div class="d-node accent">http.createServer()</div>
+          <span class="d-arrow">↕</span>
+          <div class="d-node">Custom Router + Middleware</div>
+          <span class="d-arrow">↕</span>
+          <div class="d-node db">Oracle DB (Local Native)</div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top: 12px; padding: 8px; background: rgba(99,102,241,0.06); border-radius: 8px; font-size: 11px; color: var(--accent-light);">
+      🔄 Service Worker intercepts &amp; caches the app shell (Stale-While-Revalidate)
+    </div>
+  </div>
+  <span class="slide-num">5 / 15</span>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 6: Technology Stack -->
+<!-- ============================================================ -->
+<div class="slide">
+  <h2 class="slide-title"><span class="icon">⚙️</span> Technology Stack</h2>
+  <div class="tech-grid">
+    <div class="tech-card">
+      <div class="tech-label">Frontend Core</div>
+      <p>HTML5, CSS Variables layout system, ES6 JavaScript Modules</p>
+    </div>
+    <div class="tech-card">
+      <div class="tech-label">PWA Engine</div>
+      <p>Service Worker (Stale-While-Revalidate), IndexedDB API</p>
+    </div>
+    <div class="tech-card">
+      <div class="tech-label">Hardware APIs</div>
+      <p>getUserMedia, BarcodeDetector API, Web Audio Synthesizer</p>
+    </div>
+    <div class="tech-card">
+      <div class="tech-label">Backend — Zero Framework</div>
+      <p>Node.js (ESM, --watch) · Custom http server · Hand-built router, middleware, CORS, body parser</p>
+    </div>
+    <div class="tech-card">
+      <div class="tech-label">Database</div>
+      <p>Oracle XE 21c — local native · oracledb v6 Thin mode (localhost:1521/XEPDB1)</p>
+    </div>
+    <div class="tech-card">
+      <div class="tech-label">Infrastructure</div>
+      <p>Docker Compose (production only) · Git/GitHub</p>
+    </div>
+  </div>
+  <span class="slide-num">6 / 15</span>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 7: Functional Requirements -->
+<!-- ============================================================ -->
+<div class="slide">
+  <h2 class="slide-title"><span class="icon">📋</span> Functional Requirements</h2>
+  <div class="split">
+    <div class="split-col">
+      <h3>Staff / Common</h3>
+      <ul class="content-list">
+        <li>Secure Login / Session validation</li>
+        <li>Log transactions (Sale OUT / Stock Received IN)</li>
+        <li>Search products (dynamic autocomplete)</li>
+        <li>Scan barcodes with camera to autofill forms</li>
+      </ul>
+    </div>
+    <div class="split-col">
+      <h3>Administrator</h3>
+      <ul class="content-list">
+        <li>Full Product Management (Create, Edit, Delete)</li>
+        <li>Settings Directory (Register staff, Toggle status)</li>
+        <li>Dashboard analytics (Stock counts, Canvas charts, Expiry alerts)</li>
+      </ul>
+    </div>
+  </div>
+  <span class="slide-num">7 / 15</span>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 8: Non-Functional Requirements -->
+<!-- ============================================================ -->
+<div class="slide">
+  <h2 class="slide-title"><span class="icon">📊</span> Non-Functional Requirements</h2>
+  <ul class="content-list">
+    <li><strong>Performance</strong> — UI response time under 50ms; static bundle load under 200ms.</li>
+    <li><strong>Availability</strong> — 100% operational offline. App shell cached, allowing disconnections at any stage.</li>
+    <li><strong>Reliability</strong> — FIFO sync queue prevents duplicate inserts via unique transaction UUIDs (idempotency).</li>
+    <li><strong>Security</strong> — Cryptographic Bcrypt hashing for credentials; token-based JWT route authentication.</li>
+    <li><strong>Usability</strong> — Minimalist layouts, clear alert badges, automatic input formatting.</li>
+  </ul>
+  <span class="slide-num">8 / 15</span>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 9: Data Flow Diagram -->
+<!-- ============================================================ -->
+<div class="slide">
+  <h2 class="slide-title"><span class="icon">🔄</span> Data Flow Diagram — Level 1</h2>
+  <div class="diagram-box">
+    <span class="diagram-label">Transaction Lifecycle</span>
+    <div style="padding-top: 16px;">
+      <div class="diagram-nodes">
+        <div class="d-node">👤 User (Admin/Staff)</div>
+        <span class="d-arrow">→</span>
+        <div class="d-node accent">Record View (Form)</div>
+        <span class="d-arrow">→</span>
+        <div class="d-node" style="background: rgba(245,158,11,0.1); border-color: rgba(245,158,11,0.3); color: var(--warning);">Online?</div>
+      </div>
+      <div style="display: flex; justify-content: center; gap: 80px; margin-top: 12px;">
+        <div style="text-align: center;">
+          <div style="font-size: 10px; color: var(--success); font-weight: 600; margin-bottom: 6px;">✓ YES</div>
+          <div class="d-node accent">Node.js Server</div>
+          <div style="margin: 6px 0;"><span class="d-arrow">↓</span></div>
+          <div class="d-node db">Oracle DB (Local)</div>
+        </div>
+        <div style="text-align: center;">
+          <div style="font-size: 10px; color: var(--danger); font-weight: 600; margin-bottom: 6px;">✗ NO</div>
+          <div class="d-node db" style="border-radius: 8px;">IndexedDB Queue</div>
+          <div style="margin: 6px 0;"><span class="d-arrow">↓</span></div>
+          <div class="d-node accent">Sync Manager</div>
+          <div style="font-size: 10px; color: var(--text-dim); margin-top: 4px;">Replays FIFO on reconnect →</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <span class="slide-num">9 / 15</span>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 10: ER Diagram -->
+<!-- ============================================================ -->
+<div class="slide">
+  <h2 class="slide-title"><span class="icon">🗄️</span> Entity Relationship Diagram</h2>
+  <div class="er-grid">
+    <div class="er-table">
+      <div class="er-header">USERS</div>
+      <div class="er-row"><span>id</span> <span class="pk">PK</span></div>
+      <div class="er-row"><span>email</span> <span class="uk">UNIQUE</span></div>
+      <div class="er-row"><span>password_hash</span></div>
+      <div class="er-row"><span>full_name</span></div>
+      <div class="er-row"><span>role</span></div>
+      <div class="er-row"><span>is_active</span></div>
+      <div class="er-row"><span>created_at</span></div>
+    </div>
+    <div class="er-table">
+      <div class="er-header">PRODUCTS</div>
+      <div class="er-row"><span>id</span> <span class="pk">PK</span></div>
+      <div class="er-row"><span>sku</span> <span class="uk">UNIQUE</span></div>
+      <div class="er-row"><span>barcode</span></div>
+      <div class="er-row"><span>name, category, unit</span></div>
+      <div class="er-row"><span>cost_price, sell_price</span></div>
+      <div class="er-row"><span>low_stock_threshold</span></div>
+      <div class="er-row"><span>expiry_date</span></div>
+      <div class="er-row"><span>created_by</span> <span class="fk">FK → users</span></div>
+    </div>
+    <div class="er-table">
+      <div class="er-header">TRANSACTIONS</div>
+      <div class="er-row"><span>id</span> <span class="pk">PK</span></div>
+      <div class="er-row"><span>client_txn_id</span> <span class="uk">UNIQUE</span></div>
+      <div class="er-row"><span>product_id</span> <span class="fk">FK → products</span></div>
+      <div class="er-row"><span>user_id</span> <span class="fk">FK → users</span></div>
+      <div class="er-row"><span>txn_type (IN/OUT)</span></div>
+      <div class="er-row"><span>quantity, unit_price</span></div>
+      <div class="er-row"><span>occurred_at</span></div>
+      <div class="er-row"><span>synced_at</span></div>
+    </div>
+  </div>
+  <div style="text-align: center; margin-top: 16px; font-size: 12px; color: var(--text-dim);">
+    USERS <span style="color: var(--accent-light);">||--o{</span> PRODUCTS (creates) &nbsp;&nbsp;·&nbsp;&nbsp;
+    USERS <span style="color: var(--accent-light);">||--o{</span> TRANSACTIONS (performs) &nbsp;&nbsp;·&nbsp;&nbsp;
+    PRODUCTS <span style="color: var(--accent-light);">||--o{</span> TRANSACTIONS (receives)
+  </div>
+  <span class="slide-num">10 / 15</span>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 11: SQL Schema -->
+<!-- ============================================================ -->
+<div class="slide">
+  <h2 class="slide-title"><span class="icon">💾</span> Oracle SQL Schema</h2>
+<div class="code-block"><span class="kw">CREATE TABLE</span> <span class="type">users</span> (
+  id       <span class="type">NUMBER</span> <span class="kw">GENERATED ALWAYS AS IDENTITY PRIMARY KEY</span>,
+  email    <span class="type">VARCHAR2</span>(<span class="num">160</span>) <span class="kw">UNIQUE NOT NULL</span>,
+  password_hash <span class="type">VARCHAR2</span>(<span class="num">255</span>) <span class="kw">NOT NULL</span>,
+  full_name     <span class="type">VARCHAR2</span>(<span class="num">120</span>) <span class="kw">NOT NULL</span>,
+  role     <span class="type">VARCHAR2</span>(<span class="num">20</span>) <span class="kw">DEFAULT</span> <span class="str">'STAFF'</span> <span class="kw">CHECK</span> (role <span class="kw">IN</span> (<span class="str">'ADMIN'</span>,<span class="str">'STAFF'</span>)),
+  is_active <span class="type">NUMBER</span>(<span class="num">1</span>) <span class="kw">DEFAULT</span> <span class="num">1</span> <span class="kw">CHECK</span> (is_active <span class="kw">IN</span> (<span class="num">0</span>,<span class="num">1</span>))
+);
+
+<span class="kw">CREATE TABLE</span> <span class="type">products</span> (
+  id        <span class="type">NUMBER</span> <span class="kw">GENERATED ALWAYS AS IDENTITY PRIMARY KEY</span>,
+  sku       <span class="type">VARCHAR2</span>(<span class="num">64</span>) <span class="kw">UNIQUE NOT NULL</span>,
+  barcode   <span class="type">VARCHAR2</span>(<span class="num">64</span>),
+  name      <span class="type">VARCHAR2</span>(<span class="num">200</span>) <span class="kw">NOT NULL</span>,
+  cost_price <span class="type">NUMBER</span>(<span class="num">12</span>,<span class="num">2</span>) <span class="kw">NOT NULL</span>,
+  sell_price <span class="type">NUMBER</span>(<span class="num">12</span>,<span class="num">2</span>) <span class="kw">NOT NULL</span>,
+  low_stock_threshold <span class="type">NUMBER</span> <span class="kw">DEFAULT</span> <span class="num">5</span>,
+  expiry_date <span class="type">DATE</span>,
+  created_by  <span class="type">NUMBER</span> <span class="kw">REFERENCES</span> users(id)
+);
+
+<span class="kw">CREATE TABLE</span> <span class="type">transactions</span> (
+  id           <span class="type">NUMBER</span> <span class="kw">GENERATED ALWAYS AS IDENTITY PRIMARY KEY</span>,
+  client_txn_id <span class="type">VARCHAR2</span>(<span class="num">40</span>) <span class="kw">UNIQUE NOT NULL</span>,  <span class="comment">-- idempotency key</span>
+  product_id   <span class="type">NUMBER</span> <span class="kw">REFERENCES</span> products(id),
+  user_id      <span class="type">NUMBER</span> <span class="kw">REFERENCES</span> users(id),
+  txn_type     <span class="type">VARCHAR2</span>(<span class="num">10</span>) <span class="kw">CHECK</span> (txn_type <span class="kw">IN</span> (<span class="str">'IN'</span>,<span class="str">'OUT'</span>)),
+  quantity     <span class="type">NUMBER</span>(<span class="num">12</span>,<span class="num">3</span>) <span class="kw">NOT NULL</span>,
+  unit_price   <span class="type">NUMBER</span>(<span class="num">10</span>,<span class="num">2</span>) <span class="kw">NOT NULL</span>,
+  occurred_at  <span class="type">TIMESTAMP</span> <span class="kw">DEFAULT SYSTIMESTAMP</span>
+);</div>
+  <span class="slide-num">11 / 15</span>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 12: Gantt Chart -->
+<!-- ============================================================ -->
+<div class="slide">
+  <h2 class="slide-title"><span class="icon">📅</span> Development Timeline</h2>
+  <div class="timeline">
+    <div style="display: flex; margin-bottom: 12px; font-size: 10px; color: var(--text-dim); padding-left: 200px;">
+      <span style="flex: 1;">Week 1</span>
+      <span style="flex: 1;">Week 2</span>
+      <span style="flex: 1;">Week 3</span>
+      <span style="flex: 1;">Week 4</span>
+    </div>
+    <div class="timeline-row">
+      <div class="timeline-label">Requirements &amp; Spec</div>
+      <div class="timeline-bar-container">
+        <div class="timeline-bar" style="left: 0%; width: 22%; background: linear-gradient(90deg, #6366f1, #818cf8);">Jun 1-4</div>
+      </div>
+    </div>
+    <div class="timeline-row">
+      <div class="timeline-label">Database Design</div>
+      <div class="timeline-bar-container">
+        <div class="timeline-bar" style="left: 14%; width: 16%; background: linear-gradient(90deg, #8b5cf6, #a78bfa);">Jun 5-7</div>
+      </div>
+    </div>
+    <div class="timeline-row">
+      <div class="timeline-label">Backend REST API</div>
+      <div class="timeline-bar-container">
+        <div class="timeline-bar" style="left: 25%; width: 32%; background: linear-gradient(90deg, #22c55e, #4ade80);">Jun 8-15</div>
+      </div>
+    </div>
+    <div class="timeline-row">
+      <div class="timeline-label">Frontend Core Layout</div>
+      <div class="timeline-bar-container">
+        <div class="timeline-bar" style="left: 54%; width: 20%; background: linear-gradient(90deg, #3b82f6, #60a5fa);">Jun 16-20</div>
+      </div>
+    </div>
+    <div class="timeline-row">
+      <div class="timeline-label">PWA Offline Sync</div>
+      <div class="timeline-bar-container">
+        <div class="timeline-bar" style="left: 71%; width: 20%; background: linear-gradient(90deg, #f59e0b, #fbbf24);">Jun 21-25</div>
+      </div>
+    </div>
+    <div class="timeline-row">
+      <div class="timeline-label">Integration &amp; Testing</div>
+      <div class="timeline-bar-container">
+        <div class="timeline-bar" style="left: 89%; width: 11%; background: linear-gradient(90deg, #ef4444, #f87171);">Jun 26-28</div>
+      </div>
+    </div>
+  </div>
+  <span class="slide-num">12 / 15</span>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 13: SWOT -->
+<!-- ============================================================ -->
+<div class="slide">
+  <h2 class="slide-title"><span class="icon">📈</span> SWOT Analysis</h2>
+  <div class="swot-grid">
+    <div class="swot-card s">
+      <h4>Strengths</h4>
+      <ul>
+        <li>• 100% offline uptime via IndexedDB + Service Workers</li>
+        <li>• Ultralight — zero JavaScript framework overhead</li>
+        <li>• Conflict-free transactions via client UUID idempotency</li>
+      </ul>
+    </div>
+    <div class="swot-card w">
+      <h4>Weaknesses</h4>
+      <ul>
+        <li>• Database updates rely on client sync triggers</li>
+        <li>• Camera barcode detection needs modern browser</li>
+      </ul>
+    </div>
+    <div class="swot-card o">
+      <h4>Opportunities</h4>
+      <ul>
+        <li>• Multi-terminal retail POS expansion</li>
+        <li>• Local hardware receipt printer integration</li>
+      </ul>
+    </div>
+    <div class="swot-card t">
+      <h4>Threats</h4>
+      <ul>
+        <li>• Device cache-clear could affect unsynced data</li>
+        <li>• Evolving browser security for camera feeds</li>
+      </ul>
+    </div>
+  </div>
+  <span class="slide-num">13 / 15</span>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 14: Cost Analysis -->
+<!-- ============================================================ -->
+<div class="slide">
+  <h2 class="slide-title"><span class="icon">💰</span> Project Cost Analysis (BDT)</h2>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Development Phase</th>
+        <th style="text-align: center;">Market Estimate (BDT)</th>
+        <th style="text-align: center;">Actual Cost (BDT)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Design &amp; UI/UX</td>
+        <td style="text-align: center;">10,000 – 15,000</td>
+        <td style="text-align: center; color: var(--success);">0 <span style="font-size: 11px; color: var(--text-dim);">(Student)</span></td>
+      </tr>
+      <tr>
+        <td>Frontend Development</td>
+        <td style="text-align: center;">45,000 – 60,000</td>
+        <td style="text-align: center; color: var(--success);">0 <span style="font-size: 11px; color: var(--text-dim);">(Student)</span></td>
+      </tr>
+      <tr>
+        <td>Backend Development</td>
+        <td style="text-align: center;">60,000 – 80,000</td>
+        <td style="text-align: center; color: var(--success);">0 <span style="font-size: 11px; color: var(--text-dim);">(Student)</span></td>
+      </tr>
+      <tr>
+        <td>Testing &amp; QA</td>
+        <td style="text-align: center;">15,000 – 25,000</td>
+        <td style="text-align: center; color: var(--success);">0 <span style="font-size: 11px; color: var(--text-dim);">(Student)</span></td>
+      </tr>
+      <tr>
+        <td>Production Hosting</td>
+        <td style="text-align: center;">5,000 – 10,000</td>
+        <td style="text-align: center; color: var(--success);">0 <span style="font-size: 11px; color: var(--text-dim);">(Local machine)</span></td>
+      </tr>
+      <tr>
+        <td>Oracle Database</td>
+        <td style="text-align: center;">12,000 – 24,000</td>
+        <td style="text-align: center; color: var(--success);">0 <span style="font-size: 11px; color: var(--text-dim);">(XE 21c free)</span></td>
+      </tr>
+      <tr>
+        <td><strong>Total</strong></td>
+        <td style="text-align: center;"><strong>1,47,000 – 2,14,000</strong></td>
+        <td style="text-align: center;"><strong style="color: var(--success);">0 BDT</strong></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="slide-num">14 / 15</span>
+</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 15: Thank You -->
+<!-- ============================================================ -->
+<div class="slide slide--thanks">
+  <h1 class="thanks-title">Thank You</h1>
+  <p style="font-size: 16px; color: var(--text-muted); max-width: 600px; line-height: 1.7; margin-bottom: 32px; position: relative; z-index: 1;">
+    Bazar-Trace is a fully functional, offline-resilient inventory application.<br>
+    Built with pure vanilla code and relational Oracle schemas —<br>
+    proving modern Web APIs can replace heavy commercial frameworks.
+  </p>
+  <div class="presenter-info" style="margin-bottom: 24px;">
+    <div>
+      <span class="label">Presenter</span>
+      <strong>Arif Hossen</strong>
+      <span>ID: 231010687</span>
+    </div>
+    <div>
+      <span class="label">Supervisor</span>
+      <strong>Reduanul Bari Subhon sir</strong>
+    </div>
+    <div>
+      <span class="label">Mentor</span>
+      <strong>Israt Jahan miss</strong>
+    </div>
+  </div>
+  <p style="font-size: 14px; color: var(--accent-light); font-weight: 500; position: relative; z-index: 1;">
+    I am now ready to take any questions from the panel.
+  </p>
+  <span class="slide-num">15 / 15</span>
+</div>
+
 </body>
 </html>
