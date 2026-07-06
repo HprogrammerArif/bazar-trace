@@ -9,14 +9,15 @@ This document contains your complete presentation slides script and layout, form
 *   **Main Title:** Bazar-Trace: Offline-First PWA Stock & Inventory Management System
 *   **Subtitle:** Built with HTML, CSS, Vanilla JS, Node.js (Custom HTTP Server) & Oracle Database (Local)
 *   **Presenter Information:**
-    *   **Name:** [Your Name]
+    *   **Name:** Arif Hossen
     *   **ID/Roll Number:** 231010687
     *   **Department:** Computer Science & Engineering (CSE)
 *   **Supervision:**
-    *   **Supervisor:** Reduanul Bari Subhon
+    *   **Supervisor:** Reduanul Bari Subhon sir
+    *   **Mentor:** Israt Jahan miss
 *   **Visual Suggestion:** A clean title card displaying the University of Scholars logo on an indigo-slate background.
 *   **Speaker Notes:**
-    > "Honorable members of the defense board, supervisor, and teachers, welcome to my defense presentation. I am [Your Name], student ID 231010687. Today I will present my capstone project: 'Bazar-Trace', an offline-first progressive web application for stock and inventory management, built under the guidance of my supervisor, Reduanul Bari Subhon."
+    > "Honorable members of the defense board, supervisor, and teachers, welcome to my defense presentation. I am Arif Hossen, student ID 231010687. Today I will present my capstone project: 'Bazar-Trace', an offline-first progressive web application for stock and inventory management, built under the guidance of my supervisor, Reduanul Bari Subhon."
 
 ---
 
