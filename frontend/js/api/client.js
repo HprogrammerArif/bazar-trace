@@ -36,6 +36,11 @@ async function request(url, options = {}) {
       return null;
     }
 
+    // If the server returns a gateway error (e.g., backend is offline under dev server proxy)
+    if (response.status === 502 || response.status === 503 || response.status === 504) {
+      return handleOffline(url, options);
+    }
+
     let data;
     try {
       data = await response.json();
